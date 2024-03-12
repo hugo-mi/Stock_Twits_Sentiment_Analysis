@@ -79,7 +79,7 @@ def insert_tweets(df, uri, db_name, collection_name):
     print("\n\n " + str(counter) + " ROWS INSERTED SUCCESSFULLY INTO "+ db_name+"."+collection_name)
     
 
-def retrieve_from_mongodb(uri, db_name, collection_name):
+def get_tweets_from_db(uri, db_name, collection_name):
     # Function to connect to MongoDB and retrieve data
     client = MongoClient(uri)
     db_tweets = client[db_name]
