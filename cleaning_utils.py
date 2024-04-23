@@ -12,6 +12,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 test = 'hello, i think $META will go up and as @bolosse_du_75 said earlier on https.alpha_trader.com'
 
 def replace_tags(text ,ticker=True, urls=True, users=True):
+    
+    if str(text) == 'nan':
+        return ''
 
     if ticker:
         text = re.sub('\$[A-Z]{1,6}', 'cashtag', text)
