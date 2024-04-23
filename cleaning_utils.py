@@ -55,7 +55,7 @@ def full_preprocess(text, remove_stops=True):
     if remove_stops:
         text = remove_stop_words(text)
 
-    return text
+    return ' '.join(text)
 
 
 def get_grams(tokens, ngrams=(1,1), min_frequency=0):
