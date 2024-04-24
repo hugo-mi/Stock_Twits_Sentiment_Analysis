@@ -13,11 +13,11 @@ test = 'hello, i think $META will go up and as @bolosse_du_75 said earlier on ht
 
 def replace_tags(text ,ticker=True, urls=True, users=True):
     
-    if str(text) == 'nan':
+    if str(text) in ['nan', 'None']:
         return ''
 
     if ticker:
-        text = re.sub('\$[A-Z]{1,6}', 'cashtag', text)
+        text = re.sub('\$[A-Za-z]{1,6}[^A-Za-z]', 'cashtag', text)
 
     if urls:
         text = re.sub('http[^ ]*', 'linktag', text)
