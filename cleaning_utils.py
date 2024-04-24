@@ -17,7 +17,7 @@ def replace_tags(text ,ticker=True, urls=True, users=True):
         return ''
 
     if ticker:
-        text = re.sub('\$[A-Za-z]{1,6}[^A-Za-z]', 'cashtag', text)
+        text = re.sub('\$[A-Za-z]{1,6}', 'cashtag ', text)
 
     if urls:
         text = re.sub('http[^ ]*', 'linktag', text)
