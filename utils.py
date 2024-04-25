@@ -3,9 +3,10 @@ import pandas as pd
 import numpy as np
 
 import json
+import time
 import requests
 from datetime import datetime
-import time
+
 ### Data Viz ###
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -47,10 +48,9 @@ def insert_to_mongodb(row, uri, db_name, collection_name):
     client = MongoClient(uri)
     db_tweets = client[db_name]
     collection = db_tweets[collection_name]
-    collection.insert_many(row.to_dict())
-    # Insert row into MongoDB
-   # collection.insert_one(row.to_dict())
 
+    # Insert row into MongoDB
+    collection.insert_one(row.to_dict())
     
 def clean_mongodb(uri, db_name, collection_name):
     """
@@ -69,14 +69,14 @@ def insert_tweets(df, uri, db_name, collection_name):
     Insert tweet into the collection
     """
     # Clean the collection
-    #print("STARTING TO CLEAN DATA...")
-    #clean_mongodb(uri=URI, db_name=DB_NAME, collection_name=collection_name)
+    print("STARTING TO CLEAN DATA...")
+    clean_mongodb(uri=URI, db_name=DB_NAME, collection_name="META")
     counter = 0
     print("STARTING TO INSERT DATA...")
-    #for index, row in df.iterrows():
-    insert_to_mongodb(df, uri=URI, db_name=DB_NAME, collection_name=collection_name)
-   # print("row: "+ str(index) + " inserted")
-    counter = counter + 1
+    for index, row in df.iterrows():
+        insert_to_mongodb(row, uri=URI, db_name=DB_NAME, collection_name="META")
+        print("row: "+ str(index) + " inserted")
+        counter = counter + 1
     print("\n\n " + str(counter) + " ROWS INSERTED SUCCESSFULLY INTO "+ db_name+"."+collection_name)
     
 
@@ -95,20 +95,25 @@ def get_tweets_from_db(uri, db_name, collection_name):
 # DATA COLLECTION (StockTwits) 
 #####################################################
 def collect_tweets(ticker="META", nb_url=10):
-
+    
     headers = {'User-Agent': 'Mozilla/5.0 Chrome/39.0.2171.95 Safari/537.36'}
 
     rows = []
+    count = 10
     print("STARTING TO COLLECT TWEET "+ ticker.upper() + "...\n\n")
+    maxid = 555986259
     for i in range(0, nb_url):
+        idx = np.random.randint(10, 99)
         time.sleep(1)
-        if i == 0:
-            url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json"
-        else:
-            url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json?max=" + str(maxid)
+        headers = {'User-Agent': 'Mozilla/5.0 Chrome/39.0.2171.{} Safari/537.36'.format(idx)}
+
+        #if i == 0:
+        #    url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json"
+        #else:
+        url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json?max=" + str(maxid)
 
         try:
-            print("COLLECTNG FROM:... \n" + str(i+1) + ": " + url)
+            print("COLLECTNG FROM:... " + str(i+1) + ": " + url)
 
             r = requests.get(url, headers=headers)
             data = json.loads(r.content)
@@ -121,20 +126,32 @@ def collect_tweets(ticker="META", nb_url=10):
                 sentiment = ""
                 if "Bearish" in str(m["entities"]["sentiment"]):
                     sentiment = "bearish"
-                if "Bullish" in str(m["entities"]["sentiment"]):
+                elif "Bullish" in str(m["entities"]["sentiment"]):
                     sentiment = "bullish"
-                if str(m["entities"]["sentiment"]) == "None":
+                elif str(m["entities"]["sentiment"]) == "None":
                     sentiment = "None"
                 rows.append(( date, content, sentiment ))
+            print(len(rows))
 
-            df_meta_tweets = pd.DataFrame(rows, columns=["date","content","true_sentiment"])
-            insert_tweets(df_meta_tweets, URI, DB_NAME, ticker)
+            try:    
+                if len(rows) > 10000:
+                    df_meta_tweets = pd.DataFrame(rows, columns=["date","content","true_sentiment"])
+
+                    # Filter out to keep all the tweets for which the sentiment is `bullish` or `bearish
+                    df_meta_tweets = df_meta_tweets[df_meta_tweets['true_sentiment'].isin(['bearish', 'bullish'])]
+                    df_meta_tweets.to_excel('aapl_tweets_{}.xlsx'.format(count))
+                    count += 1
+                    rows = []
+
+            except:
+                rows = []
 
         except:
-            time.sleep(5)
+            print('********* getting blocked !! *******')
+            time.sleep(120)
             continue
-            
     df_meta_tweets = pd.DataFrame(rows, columns=["date","content","true_sentiment"])
+
     
     # Filter out to keep all the tweets for which the sentiment is `bullish` or `bearish
     df_meta_tweets = df_meta_tweets[df_meta_tweets['true_sentiment'].isin(['bearish', 'bullish'])]
