@@ -3,9 +3,9 @@ import pandas as pd
 import numpy as np
 
 import json
-import time
 import requests
 from datetime import datetime
+import time
 
 ### Data Viz ###
 import seaborn as sns
@@ -52,6 +52,17 @@ def insert_to_mongodb(row, uri, db_name, collection_name):
     # Insert row into MongoDB
     collection.insert_one(row.to_dict())
     
+def insert_many_to_mongodb(df, uri, db_name, collection_name):
+    """
+    Insert data into the collection
+    """
+    client = MongoClient(uri)
+    db_tweets = client[db_name]
+    collection = db_tweets[collection_name]
+
+    # Insert row into MongoDB
+    collection.insert_one(df.to_dict())
+
 def clean_mongodb(uri, db_name, collection_name):
     """
     Clean the collection before inserting new data
@@ -70,12 +81,12 @@ def insert_tweets(df, uri, db_name, collection_name):
     """
     # Clean the collection
     print("STARTING TO CLEAN DATA...")
-    clean_mongodb(uri=URI, db_name=DB_NAME, collection_name="META")
+    clean_mongodb(uri=URI, db_name=DB_NAME, collection_name=collection_name)
     counter = 0
     print("STARTING TO INSERT DATA...")
     for index, row in df.iterrows():
-        insert_to_mongodb(row, uri=URI, db_name=DB_NAME, collection_name="META")
-        print("row: "+ str(index) + " inserted")
+        insert_to_mongodb(row, uri=URI, db_name=DB_NAME, collection_name=collection_name)
+        #print("row: "+ str(index) + " inserted")
         counter = counter + 1
     print("\n\n " + str(counter) + " ROWS INSERTED SUCCESSFULLY INTO "+ db_name+"."+collection_name)
     
@@ -99,9 +110,9 @@ def collect_tweets(ticker="META", nb_url=10):
     headers = {'User-Agent': 'Mozilla/5.0 Chrome/39.0.2171.95 Safari/537.36'}
 
     rows = []
-    count = 318
+    count = 0
     print("STARTING TO COLLECT TWEET "+ ticker.upper() + "...\n\n")
-    maxid = 547231032
+    maxid = 0
     for i in range(0, nb_url):
         idx = np.random.randint(10, 99)
         time.sleep(0.5)
@@ -159,7 +170,6 @@ def collect_tweets(ticker="META", nb_url=10):
     print("\n" + str(len(df_meta_tweets)) + " TWEETS ARE SUCCESFULLY COLLECTED FROM THE TICKER" + ticker.upper())
     
     return df_meta_tweets
-
 
 ##################################################### 
 # MODEL EVALUATION
