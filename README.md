@@ -93,15 +93,15 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | Log-Likelihood      | 1048.4     | 909.52     |
 | AIC                 | -2091      | -1813      |
 | BIC                 | -2075      | -1797      |
-| Coefficient: Const  | 0.1655     | 0.1561     |
-| Std Err: Const      | 0.010      | 0.011      |
-| P>|z|: Const        | 0.000      | 0.000      |
+| Coefficient Const  | 0.1655     | 0.1561     |
+| Std Err Const      | 0.010      | 0.011      |
+| P>|z| Const        | 0.000      | 0.000      |
 | Coefficient: Lag1   | 0.6126     | 0.6622     |
-| Std Err: Lag1       | 0.024      | 0.023      |
-| P>|z|: Lag1         | 0.000      | 0.000      |
+| Std Err Lag1       | 0.024      | 0.023      |
+| P>|z| Lag1         | 0.000      | 0.000      |
 | Coefficient: Return_Lag1 | -0.4771 | -0.8681 |
-| Std Err: Return_Lag1 | 0.155     | 0.179      |
-| P>|z|: Return_Lag1  | 0.002      | 0.000      |
+| Std Err Return_Lag1 | 0.155     | 0.179      |
+| P>|z| Return_Lag1  | 0.002      | 0.000      |
 
 ### Comparison of OLS Regression Results for Forecasting Returns using Unigram and Bigram Techniques
 
@@ -116,14 +116,14 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | AIC                 | -7117      | -7118      |
 | BIC                 | -7102      | -7102      |
 | Coefficient: Const  | 0.0011     | 0.0014     |
-| Std Err: Const      | 0.002      | 0.002      |
-| P>|z|: Const        | 0.513      | 0.369      |
+| Std Err Const      | 0.002      | 0.002      |
+| P>|z| Const        | 0.513      | 0.369      |
 | Coefficient: Positive Ratio Lag1 | -0.0002 | -0.0008 |
-| Std Err: Positive Ratio Lag1 | 0.004 | 0.003      |
-| P>|z|: Positive Ratio Lag1 | 0.949 | 0.784      |
+| Std Err Positive Ratio Lag1 | 0.004 | 0.003      |
+| P>|z| Positive Ratio Lag1 | 0.949 | 0.784      |
 | Coefficient: Return Lag1 | -0.0170 | -0.0154 |
-| Std Err: Return Lag1 | 0.033      | 0.033      |
-| P>|z|: Return Lag1   | 0.602      | 0.635      |
+| Std Err Return Lag1 | 0.033      | 0.033      |
+| P>|z| Return Lag1   | 0.602      | 0.635      |
 
 ## Findings
 Sentiment analysis are widely used and goes beyond price movements, providing a holistic view that considers qualitative factors. By analyzing sentiments in financial tweets, investors can identify trends, catalysts, and anomalies, empowering them to make informed decisions.
