@@ -96,7 +96,7 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | Coefficient Const  | 0.1655     | 0.1561     |
 | Std Err Const      | 0.010      | 0.011      |
 | P>|z| Const        | 0.000      | 0.000      |
-| Coefficient: Lag1   | 0.6126     | 0.6622     |
+| Coefficient Lag1   | 0.6126     | 0.6622     |
 | Std Err Lag1       | 0.024      | 0.023      |
 | P>|z| Lag1         | 0.000      | 0.000      |
 | Coefficient: Return_Lag1 | -0.4771 | -0.8681 |
@@ -121,7 +121,7 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | Coefficient: Positive Ratio Lag1 | -0.0002 | -0.0008 |
 | Std Err Positive Ratio Lag1 | 0.004 | 0.003      |
 | P>|z| Positive Ratio Lag1 | 0.949 | 0.784      |
-| Coefficient: Return Lag1 | -0.0170 | -0.0154 |
+| Coefficient Return Lag1 | -0.0170 | -0.0154 |
 | Std Err Return Lag1 | 0.033      | 0.033      |
 | P>|z| Return Lag1   | 0.602      | 0.635      |
 
