@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 import json
+import time
 import requests
 from datetime import datetime
 
@@ -94,37 +95,63 @@ def get_tweets_from_db(uri, db_name, collection_name):
 # DATA COLLECTION (StockTwits) 
 #####################################################
 def collect_tweets(ticker="META", nb_url=10):
-
+    
     headers = {'User-Agent': 'Mozilla/5.0 Chrome/39.0.2171.95 Safari/537.36'}
 
     rows = []
+    count = 318
     print("STARTING TO COLLECT TWEET "+ ticker.upper() + "...\n\n")
+    maxid = 547231032
     for i in range(0, nb_url):
-        if i == 0:
-            url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json"
-        else:
-            url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json?max=" + str(maxid)
+        idx = np.random.randint(10, 99)
+        time.sleep(0.5)
+        headers = {'User-Agent': 'Mozilla/5.0 Chrome/39.0.2171.{} Safari/537.36'.format(idx)}
 
-        print("COLLECTNG FROM:... \n" + str(i+1) + ": " + url)
+        #if i == 0:
+        #    url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json"
+        #else:
+        url = "https://api.stocktwits.com/api/2/streams/symbol/" + ticker + ".json?max=" + str(maxid)
 
-        r = requests.get(url, headers=headers)
-        data = json.loads(r.content)
+        try:
+            print("COLLECTNG FROM:... " + str(i+1) + ": " + url)
 
-        maxid = data["cursor"]["max"]
+            r = requests.get(url, headers=headers)
+            data = json.loads(r.content)
 
-        for m in data["messages"]:
-            date = m["created_at"]
-            content = m["body"]
-            sentiment = ""
-            if "Bearish" in str(m["entities"]["sentiment"]):
-                sentiment = "bearish"
-            if "Bullish" in str(m["entities"]["sentiment"]):
-                sentiment = "bullish"
-            if str(m["entities"]["sentiment"]) == "None":
-                sentiment = "None"
-            rows.append(( date, content, sentiment ))
-            
+            maxid = data["cursor"]["max"]
+
+            for m in data["messages"]:
+                date = m["created_at"]
+                content = m["body"]
+                sentiment = ""
+                if "Bearish" in str(m["entities"]["sentiment"]):
+                    sentiment = "bearish"
+                elif "Bullish" in str(m["entities"]["sentiment"]):
+                    sentiment = "bullish"
+                elif str(m["entities"]["sentiment"]) == "None":
+                    sentiment = "None"
+                rows.append(( date, content, sentiment ))
+            print(len(rows))
+
+            try:    
+                if len(rows) > 10000:
+                    df_meta_tweets = pd.DataFrame(rows, columns=["date","content","true_sentiment"])
+
+                    # Filter out to keep all the tweets for which the sentiment is `bullish` or `bearish
+                    #df_meta_tweets = df_meta_tweets[df_meta_tweets['true_sentiment'].isin(['bearish', 'bullish'])]
+                    df_meta_tweets.to_excel('aapl_tweets_{}.xlsx'.format(count))
+                    count += 1
+                    rows = []
+
+            except:
+                rows = []
+
+        except:
+            print('********* getting blocked !! *******')
+            time.sleep(120)
+            continue
     df_meta_tweets = pd.DataFrame(rows, columns=["date","content","true_sentiment"])
+
     
     # Filter out to keep all the tweets for which the sentiment is `bullish` or `bearish
     df_meta_tweets = df_meta_tweets[df_meta_tweets['true_sentiment'].isin(['bearish', 'bullish'])]
