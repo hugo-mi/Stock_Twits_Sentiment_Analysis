@@ -57,6 +57,7 @@ Through this research, we seek to bridge the gap between sentiment analysis and 
 | Emojis + Punctuation      | 77.3428      | 0.547655  |
 | PosTagging                | 76.6048      | 0.534285  |
 | Tweet Tokenizer           | 78.1828      | 0.564614  |
+| DicoSlang                 | 72.19        | 0.4446    |
 
 Our analysis reveals that while some pre-processing techniques like removing stopwords and stemming may seem intuitive, they can actually degrade classification accuracy, particularly in the context of financial sentiment analysis on tweets. Incorporating emojis and punctuation, on the other hand, proves to be highly beneficial for enhancing model precision, emphasizing the importance of considering diverse pre-processing strategies in text analysis tasks. Overall we would advice for choosing preprocessing methods that are tailored to the problem at hand whenever available or feasible, as can be seen from increase and decrease in performance accuracy when using standardize methods (PorterStemmer, StopWords...) versus specific ones (Punctuation, Emojis, TweetTokenizer).
 
@@ -69,6 +70,22 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | Support Vector Machine   | 77.03        | 25 s (no parallelization) |
 | Random Forest            | 77.8         | 22 s      |
 | Multilayer Perceptron    | 78.37        | 2m 40 s   |
+| VADER                    | 45           | 15 s      |
+
+### Logistic Regression
+![Alt text](img/Log.png)
+
+### Random Forest
+![Alt text](img/RF.png)
+
+### Support Vector Machine
+![Alt text](img/SVM.png)
+
+### Multi Layers Perceptron
+![Alt text](img/MLP.png)
+
+### VADER
+![Alt text](img/VADER.png)
 
 ## Correlations
 
@@ -82,6 +99,10 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 ## Regressions
 
 ### Comparison of OLS Regression Results for Unigram and Bigram Methods
+
+$`
+\text{Sentiment}(t) = \beta_0 + \beta_1 \text{Sentiment}(t-1) + \beta_2 \text{Return}(t-1) + \epsilon
+`$
 
 | Statistic           | Unigram    | Bigram     |
 |---------------------|------------|------------|
@@ -103,7 +124,13 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | Std Err::Return_Lag1 | 0.155     | 0.179      |
 | P>\|z\|: Return_Lag1  | 0.002      | 0.000      |
 
+![Alt text](img/g1.png)
+
 ### Comparison of OLS Regression Results for Forecasting Returns using Unigram and Bigram Techniques
+
+$`
+\text{Return}(t) = \beta_0 + \beta_1 \text{Sentiment}(t-1) + \beta_2 \text{Return}(t-1) + \epsilon
+`$
 
 | Statistic           | Unigram    | Bigram     |
 |---------------------|------------|------------|
@@ -124,6 +151,8 @@ Our analysis reveals that while some pre-processing techniques like removing sto
 | Coefficient: Return Lag1 | -0.0170 | -0.0154 |
 | Std Err: Return Lag1 | 0.033      | 0.033      |
 | P>\|z\|: Return Lag1   | 0.602      | 0.635      |
+
+![Alt text](img/g2.png)
 
 ## Findings
 Sentiment analysis are widely used and goes beyond price movements, providing a holistic view that considers qualitative factors. By analyzing sentiments in financial tweets, investors can identify trends, catalysts, and anomalies, empowering them to make informed decisions.
